@@ -1,2 +1,2 @@
-#This is our project file
+//This is our project file
 #include <stdio.h>
