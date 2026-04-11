@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-//This is our project file
-#include <stdio.h>
-int main() {
-    printf("Hello World");
-    printf("The thing is working");
-    printf("Guys we are doing great");
-=======
 // This project has mainly three parts:
 // Task 1 – setting up the booking system: Honoré
 // Task 2 – using the booking system: Yaa
@@ -89,6 +81,5 @@ int main() {
 
     } while (choice != 0);
 
->>>>>>> honore
     return 0;
 }
