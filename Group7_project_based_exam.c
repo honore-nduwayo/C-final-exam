@@ -80,18 +80,8 @@ int main() {
         }
 
     } while (choice != 0);
-
-<<<<<<< HEAD
-    printf("Done!");
-=======
-printf("Done!");
->>>>>>> main
-
     return 0;
+
+
+    printf("VERIFY IF WE CAN UPDATE THE CODE FROM HERE\n");
 }
-
-
-
-
-
-
