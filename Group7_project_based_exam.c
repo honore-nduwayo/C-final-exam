@@ -81,5 +81,7 @@ int main() {
 
     } while (choice != 0);
 
+printf("Done!");
+
     return 0;
 }
