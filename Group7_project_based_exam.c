@@ -83,7 +83,7 @@ int main()
     } while (choice != 0);
 
     printf("Done!");
-    printf("Jean Michel");
+    printf("Jean Michel Is now a pro with github");
 
     return 0;
 }
