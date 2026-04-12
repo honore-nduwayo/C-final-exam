@@ -11,6 +11,7 @@
 // Task 3: applying a discount and checking the entry: Jean Michel
 
 #include <stdio.h>
+#include <string.h>
 ////////////////////TASK 1: SETTING UP THE BOOKING SYSTEM by Honoré //////////////////////////////////
 
 // Setting the limits for passengers and bookings
@@ -79,6 +80,100 @@ void showMenu() {
     printf("Enter your choice: ");
 }
 
+////////////////////TASK 2: USING THE BOOKING SYSTEM by Yaa//////////////////////////////////
+
+void openAccount() {
+    //to check if there is space in the arrays or bus
+    if(passenger_count >= MAX_PASSENGERS) {
+        printf("Error: The bus is full. Cannot open a new account.\n");
+        return;
+    }
+
+    printf("\n -- Opening a new account for a passenger --\n");
+    printf("Enter passengers name: ");
+
+    getchar();// to consume the newline character left by previous input
+
+    fgets(passengers[passenger_count].name, 50, stdin);
+    passengers[passenger_count].name[strcspn(passengers[passenger_count].name, "\n")] = '\0'; // Remove newline character
+
+    int newID = 1001 + passenger_count; // Generate a new ID based on the current count
+    passengers[passenger_count].account_number = newID;
+
+    printf("Account created! %s, your account number is: %d\n", passengers[passenger_count].name, newID);
+
+    passenger_count++; // Increment the passenger count after adding a new account
+
+}
+
+//Function for booking a journey
+void makeBooking() {
+    int accNum, foundIndex = -1;
+    char s1[3], s2[3], s3[3];
+    float total = 0.0;
+
+    printf("\n--- Book a New Journey ---\n");
+    printf("Enter your account number: ");
+    scanf("%d", &accNum);
+
+    // checking if the number exists
+    for (int i = 0; i < passenger_count; i++) {
+        if (passengers[i].account_number == accNum)
+        {
+            foundIndex = i;
+            break;
+        }
+        
+    }
+
+    if (foundIndex == -1) {
+        printf("Error: Account number %d not found. Please try again.\n", accNum);
+        return;
+    }
+
+    //Journey details
+    printf("Enter your start time (hr:min): ");
+    scanf("%s", bookings[booking_count].start_time);
+
+    printf("Enter stage 1 code(C1-C5): ");
+    scanf("%s", s1);
+
+    printf("Enter stage 2 code(M1-M5): ");
+    scanf("%s", s2);
+
+    printf("Enter stage 3 code(F1-F5): ");
+    scanf("%s", s3);
+
+    // Calculating the bus fare using strcmp
+    for (int i = 0; i < NUM_CODES; i++) {
+
+        if(strcmp(s1, stage1[i].code) == 0) total += stage1[i].price;
+        if(strcmp(s2, stage2[i].code) == 0) total += stage2[i].price;
+        if(strcmp(s3, stage3[i].code) == 0) total += stage3[i].price;
+    }
+
+    // Store the booking details into arrays
+    bookings[booking_count].account_number = accNum;
+
+    strcpy(bookings[booking_count].stage1_code, s1);
+    strcpy(bookings[booking_count].stage2_code, s2);
+    strcpy(bookings[booking_count].stage3_code, s3);
+
+    bookings[booking_count].total_price = total;
+
+    //Generate a unique booking number or ID
+    bookings[booking_count].booking_number = 5001 + booking_count;
+
+    printf("\nBooking successfully saved!! your ID: %d | Total Price: $%.2f\n", 
+        bookings[booking_count].booking_number, total);
+
+    booking_count++;
+}
+
+////////////////////TASK 3: APPLYING DISCOUNT & CONFIRMING by Jean Michel//////////////////////////////////
+
+// Jean Michel: add your function here, then call it from case 2 in main below.
+
 /// Our main function will be the entry point of our program, where we will display
 // the menu and handle user input to perform the desired actions based on the user's choice.
 //and handling user input will be added in Task 2 by Yaa and Jean Michel.
@@ -92,12 +187,11 @@ int main() {
 
         switch (choice) {
             case 1:
-                // Task 2 - Yaa: add openAccount() here
-                printf("Coming in Task 2.\n");
+                openAccount();
                 break;
             case 2:
-                // Task 2 & 3 - Yaa / Jean Michel: add makeBooking() her
-                printf("Coming in Task 2 & 3.\n");
+                makeBooking();
+                // Task 3 - Jean Michel: call your function here
                 break;
             case 0:
                 printf("Goodbye!\n");
