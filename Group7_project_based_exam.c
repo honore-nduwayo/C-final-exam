@@ -40,7 +40,7 @@ int  passenger_count = 0;
 
 int   booking_numbers[MAX_BOOKINGS];
 int   booking_account_numbers[MAX_BOOKINGS];
-char  booking_start_times[MAX_BOOKINGS][6];
+char  booking_start_times[MAX_BOOKINGS][8]; // 8 chars to safely hold "HH:MM" + extra
 char  booking_stage1_codes[MAX_BOOKINGS][3];
 char  booking_stage2_codes[MAX_BOOKINGS][3];
 char  booking_stage3_codes[MAX_BOOKINGS][3];
@@ -58,6 +58,13 @@ int isValidCode(char code[], char codes[][3]) {
     for (int i = 0; i < NUM_CODES; i++)
         if (strcmp(code, codes[i]) == 0) return 1;
     return 0;
+}
+
+// Checks if a time string is valid HH:MM format, hours 0-23, minutes 0-59
+int isValidTime(char *t) {
+    int h, m;
+    if (sscanf(t, "%d:%d", &h, &m) != 2) return 0;
+    return (h >= 0 && h <= 23 && m >= 0 && m <= 59);
 }
 
 // Function to keep displaying the menu 
@@ -128,26 +135,30 @@ int makeBooking() {
     }
 
     //Journey details
-    printf("Enter your start time (hr:min): ");
-    scanf("%s", booking_start_times[booking_count]);
+    do {
+        printf("Enter your start time (HH:MM): ");
+        scanf("%7s", booking_start_times[booking_count]);
+        if (!isValidTime(booking_start_times[booking_count]))
+            printf("Error: Invalid time. Please use HH:MM format (e.g. 09:30).\n");
+    } while (!isValidTime(booking_start_times[booking_count]));
 
     do {
         printf("Enter stage 1 code(C1-C5): ");
-        scanf("%s", s1);
+        scanf("%2s", s1);
         toUpperStr(s1);
         if (!isValidCode(s1, stage1_codes)) printf("Error: Invalid code. Please enter C1 to C5.\n");
     } while (!isValidCode(s1, stage1_codes));
 
     do {
         printf("Enter stage 2 code(M1-M5): ");
-        scanf("%s", s2);
+        scanf("%2s", s2);
         toUpperStr(s2);
         if (!isValidCode(s2, stage2_codes)) printf("Error: Invalid code. Please enter M1 to M5.\n");
     } while (!isValidCode(s2, stage2_codes));
 
     do {
         printf("Enter stage 3 code(F1-F5): ");
-        scanf("%s", s3);
+        scanf("%2s", s3);
         toUpperStr(s3);
         if (!isValidCode(s3, stage3_codes)) printf("Error: Invalid code. Please enter F1 to F5.\n");
     } while (!isValidCode(s3, stage3_codes));
@@ -230,7 +241,11 @@ int main() {
 
     do {
         showMenu();
-        scanf("%d", &choice);
+        // If input is not a number, flush the buffer and show error
+        if (scanf("%d", &choice) != 1) {
+            while (getchar() != '\n');
+            choice = -1;
+        }
 
         switch (choice) {
             case 1:
