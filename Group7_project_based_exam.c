@@ -1,10 +1,3 @@
-/*
- * Group Number : 7
- * Members      : Honore 10012500060, Yaa [Roll No], Jean Michel [Roll No]
- * Course       : GE1206 - Programming in C
- * Lecturer     : Richard Asiamah
- */
-
 // This project has mainly three parts:
 // Task 1: setting up the booking system: Honoré
 // Task 2: using the booking system: Yaa
@@ -12,7 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
+#include <ctype.h>// Thos will help uas validate characters
 ////////////////////TASK 1: SETTING UP THE BOOKING SYSTEM by Honoré //////////////////////////////////
 
 // Setting the limits for passengers and bookings
