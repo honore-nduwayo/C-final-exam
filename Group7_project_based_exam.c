@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 ////////////////////TASK 1: SETTING UP THE BOOKING SYSTEM by Honoré //////////////////////////////////
 
 // Setting the limits for passengers and bookings
@@ -45,6 +46,19 @@ char  booking_stage2_codes[MAX_BOOKINGS][3];
 char  booking_stage3_codes[MAX_BOOKINGS][3];
 float booking_total_prices[MAX_BOOKINGS];
 int   booking_count = 0;
+
+// Converts any string to uppercase so "c1" and "C1" are treated the same
+void toUpperStr(char *str) {
+    for (int i = 0; str[i]; i++)
+        str[i] = toupper(str[i]);
+}
+
+// Checks if a code exists in a given stage's code array. Returns 1 if found, 0 if not.
+int isValidCode(char code[], char codes[][3]) {
+    for (int i = 0; i < NUM_CODES; i++)
+        if (strcmp(code, codes[i]) == 0) return 1;
+    return 0;
+}
 
 // Function to keep displaying the menu 
 
@@ -84,7 +98,12 @@ void openAccount() {
 }
 
 //Function for booking a journey
-void makeBooking() {
+int makeBooking() {
+    if (booking_count >= MAX_BOOKINGS) {
+        printf("Error: Booking system is full.\n");
+        return 0;
+    }
+
     int accNum, foundIndex = -1;
     char s1[3], s2[3], s3[3];
     float total = 0.0;
@@ -105,21 +124,33 @@ void makeBooking() {
 
     if (foundIndex == -1) {
         printf("Error: Account number %d not found. Please try again.\n", accNum);
-        return;
+        return 0;
     }
 
     //Journey details
     printf("Enter your start time (hr:min): ");
     scanf("%s", booking_start_times[booking_count]);
 
-    printf("Enter stage 1 code(C1-C5): ");
-    scanf("%s", s1);
+    do {
+        printf("Enter stage 1 code(C1-C5): ");
+        scanf("%s", s1);
+        toUpperStr(s1);
+        if (!isValidCode(s1, stage1_codes)) printf("Error: Invalid code. Please enter C1 to C5.\n");
+    } while (!isValidCode(s1, stage1_codes));
 
-    printf("Enter stage 2 code(M1-M5): ");
-    scanf("%s", s2);
+    do {
+        printf("Enter stage 2 code(M1-M5): ");
+        scanf("%s", s2);
+        toUpperStr(s2);
+        if (!isValidCode(s2, stage2_codes)) printf("Error: Invalid code. Please enter M1 to M5.\n");
+    } while (!isValidCode(s2, stage2_codes));
 
-    printf("Enter stage 3 code(F1-F5): ");
-    scanf("%s", s3);
+    do {
+        printf("Enter stage 3 code(F1-F5): ");
+        scanf("%s", s3);
+        toUpperStr(s3);
+        if (!isValidCode(s3, stage3_codes)) printf("Error: Invalid code. Please enter F1 to F5.\n");
+    } while (!isValidCode(s3, stage3_codes));
 
     // Calculating the bus fare using strcmp
     for (int i = 0; i < NUM_CODES; i++) {
@@ -145,6 +176,7 @@ void makeBooking() {
         booking_numbers[booking_count], total);
 
     booking_count++;
+    return 1;
 }
 
 ////////////////////TASK 3: APPLYING DISCOUNT & CONFIRMING by Jean Michel//////////////////////////////////
@@ -205,8 +237,7 @@ int main() {
                 openAccount();
                 break;
             case 2:
-                makeBooking();
-                applyDiscountAndConfirm();
+                if (makeBooking()) applyDiscountAndConfirm();
                 break;
             case 0:
                 printf("Goodbye!\n");
